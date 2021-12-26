@@ -18,12 +18,18 @@ public class ClientRunnable implements Runnable, Observer {
     public void run() {
         System.out.println("Client connected");
         serverService.addObserver(this);
+
         BufferedReader bufferedReader = new BufferedReader(
                 new InputStreamReader(socket.getInputStream()));
         String messageFromClient;
         while ((messageFromClient = bufferedReader.readLine()) != null) {
             System.out.println(messageFromClient);
-            serverService.notifyObserver(messageFromClient);
+//            serverService.notifyObserver(messageFromClient);
+
+//            3. Реализовать отправку сообщений всем кроме себя
+//            1. На сервере добавить метод notifyObserverExceptMe с логикой, где вы рассылаете всем за исключением текущего Observer
+
+            serverService.notifyObserverExceptMe(messageFromClient, this);
         }
     }
 
@@ -34,4 +40,8 @@ public class ClientRunnable implements Runnable, Observer {
         clientWriter.println(message);
         clientWriter.flush();
     }
+
+
 }
+// 1. На сервере добавить метод notifyObserverExceptMe с логикой,
+// где вы рассылаете всем за исключением текущего Observer
