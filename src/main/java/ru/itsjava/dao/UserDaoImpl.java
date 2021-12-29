@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import ru.itsjava.domain.User;
 import ru.itsjava.utils.Props;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 @AllArgsConstructor
 public class UserDaoImpl implements UserDao{
@@ -20,11 +17,25 @@ public class UserDaoImpl implements UserDao{
                 props.getValue("db.login"),
                 props.getValue("db.password"))
         ){
-            PreparedStatement preparedStatement = connection.prepareStatement("");
+            PreparedStatement preparedStatement = connection
+                    .prepareStatement("select count(*) cnt from schema_online_course.users where name = ? and password = ?");
+
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, password);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+
+            int userCount = resultSet.getInt("cnt");
+
+            if (userCount == 1){
+                return new User(name, password);
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return null;
+        throw new RuntimeException("User not found!");
     }
 }
