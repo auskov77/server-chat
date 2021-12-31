@@ -8,7 +8,7 @@ public class Props {
     private final Properties properties;
 
     @SneakyThrows
-    public Props(){
+    public Props() {
         this.properties = new Properties();
         properties.load(Props.class.getClassLoader()
                 .getResourceAsStream("application.properties"));

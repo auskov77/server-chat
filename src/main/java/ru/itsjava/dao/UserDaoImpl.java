@@ -7,18 +7,18 @@ import ru.itsjava.utils.Props;
 import java.sql.*;
 
 @AllArgsConstructor
-public class UserDaoImpl implements UserDao{
-    private  final Props props;
+public class UserDaoImpl implements UserDao {
+    private final Props props;
 
     @Override
     public User findByNameAndPassword(String name, String password) {
-        try (Connection connection = DriverManager.getConnection(
+        try(Connection connection = DriverManager.getConnection(
                 props.getValue("db.url"),
                 props.getValue("db.login"),
-                props.getValue("db.password"))
+                props.getValue("db.password"));
         ){
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("select count(*) cnt from schema_online_course.users where name = ? and password = ?");
+                    .prepareStatement("select count(*) cnt from schema_online_course.Users where name = ? and password = ?;");
 
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, password);
@@ -31,9 +31,8 @@ public class UserDaoImpl implements UserDao{
             if (userCount == 1){
                 return new User(name, password);
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
 
         throw new RuntimeException("User not found!");
