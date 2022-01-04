@@ -18,7 +18,7 @@ public class UserDaoImpl implements UserDao {
                 props.getValue("db.password"));
         ){
             PreparedStatement preparedStatement = connection
-                    .prepareStatement("select count(*) cnt from schema_online_course.Users where name = ? and password = ?;");
+                    .prepareStatement("select count(*) cnt from schema_online_course_2.users where name = ? and password = ?;");
 
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, password);
